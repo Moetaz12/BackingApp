@@ -13,15 +13,42 @@ import java.util.List;
  */
 
 public class Parse {
-    public static List<RecipeModel> parseRecip(String data) {
-        List<RecipeModel> recipeModels = new ArrayList<>();
+    public static ArrayList<RecipeModel> parseRecip(String data) {
+        ArrayList<RecipeModel> recipeModels = new ArrayList<>();
         try {
-            JSONObject object = new JSONObject(data);
-            JSONArray jsonArray = object.getJSONArray("results");
+            JSONArray jsonArray = new JSONArray(data);
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject finalobject = jsonArray.getJSONObject(i);
+                RecipeModel recipeModel = new RecipeModel();
+                recipeModel.setName(finalobject.getString("name"));
+                recipeModel.setImage(finalobject.getString("image"));
 
+                ArrayList<RecipeModel.ingredients> ingredientses = new ArrayList<>();
+                for(int j= 0;j<finalobject.getJSONArray("ingredients").length() ;j++){
+                    JSONObject innerObject = finalobject.getJSONArray("ingredients").getJSONObject(j);
+                    RecipeModel.ingredients ingredients = new RecipeModel.ingredients();
+
+                    ingredients.setQuantity(innerObject.getString("quantity"));
+                    ingredients.setIngredient(innerObject.getString("ingredient"));
+                    ingredients.setMeasure(innerObject.getString("measure"));
+                    ingredientses.add(ingredients);
+                }
+                ArrayList<RecipeModel.steps> stepses = new ArrayList<>();
+                for(int j= 0;j<finalobject.getJSONArray("steps").length() ;j++){
+                    JSONObject innerObject = finalobject.getJSONArray("steps").getJSONObject(j);
+                    RecipeModel.steps steps = new RecipeModel.steps();
+
+                    steps.setShortDescription(innerObject.getString("shortDescription"));
+                    steps.setDescription(innerObject.getString("description"));
+                    steps.setVideoURL(innerObject.getString("videoURL"));
+                    stepses.add(steps);
+                }
+
+                  recipeModel.setStepsList(stepses);
+                  recipeModel.setIngredientsList(ingredientses);
+
+                recipeModels.add(recipeModel);
 
             }
 

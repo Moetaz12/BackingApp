@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.example.moetaz.backingapp.utilities.MyUtilities.message;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -87,6 +89,7 @@ public class MainFragment extends Fragment {
             StringRequest stringRequest = new StringRequest(Request.Method.GET, Constants.JsonUrl, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+
                     DeleteData();
                     Iterator iterator = Parse.parseRecip(response).iterator();
                     while (iterator.hasNext()){
@@ -101,7 +104,7 @@ public class MainFragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
-                    MyUtilities.message(getActivity(),"Something went Wrong");
+                    message(getActivity(),"Something went Wrong");
                 }
             });
             Mysingleton.getInstance(getActivity()).addToRequest(stringRequest);
@@ -109,7 +112,7 @@ public class MainFragment extends Fragment {
     }
 
     private void SetGridManager(){
-        gridLayoutManager=new GridLayoutManager(getActivity(), 2);
+        gridLayoutManager=new GridLayoutManager(getActivity(), 1);
 
         /*
         if(MainActivity.IsTowPane)

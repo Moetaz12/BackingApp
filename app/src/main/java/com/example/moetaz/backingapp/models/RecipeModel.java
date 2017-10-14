@@ -45,7 +45,7 @@ public class RecipeModel implements Serializable {
         this.stepsList = stepsList;
     }
 
-    public static class ingredients{
+    public static class ingredients implements Serializable{
         private String quantity;
         private String measure;
         private String ingredient;
@@ -75,7 +75,7 @@ public class RecipeModel implements Serializable {
         }
     }
 
-    public static class steps{
+    public static class steps implements Serializable{
         private String shortDescription;
         private String description;
         private String videoURL;

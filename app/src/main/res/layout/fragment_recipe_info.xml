@@ -1,0 +1,31 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.moetaz.backingapp.fragments.RecipeInfoFragment">
+
+     <android.support.v7.widget.CardView
+         android:layout_margin="10dp"
+
+         android:layout_width="match_parent"
+         android:layout_height="100dp">
+    <TextView
+        android:paddingLeft="30dp"
+        android:layout_gravity="center"
+        android:textSize="30dp"
+        android:id="@+id/ing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+         />
+     </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyleviewrecipeinfo"
+        android:layout_weight="15"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"></android.support.v7.widget.RecyclerView>
+
+</LinearLayout>
