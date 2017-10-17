@@ -2,6 +2,7 @@ package com.example.moetaz.backingapp.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,9 +20,9 @@ import com.example.moetaz.backingapp.adapters.RecipeAdapter;
 import com.example.moetaz.backingapp.models.RecipeModel;
 import com.example.moetaz.backingapp.parsing.Parse;
 import com.example.moetaz.backingapp.utilities.Constants;
-import com.example.moetaz.backingapp.utilities.MyUtilities;
 import com.example.moetaz.backingapp.utilities.Mysingleton;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -51,9 +52,24 @@ public class MainFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyleviewrecipe);
         setHasOptionsMenu(true);
 
-        LoadRecip();
-
+        if(savedInstanceState != null) {
+            LoadFromBundle(savedInstanceState);
+        }else {
+            LoadRecip();
+        }
         return view;
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("list", (Serializable) recipeModelList);
+    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null) {
+            LoadFromBundle(savedInstanceState);
+        }
     }
 
     private void LoadRecip() {
@@ -128,5 +144,14 @@ public class MainFragment extends Fragment {
             recipeModelList.clear();
             customAdapter.notifyDataSetChanged();
         }
+    }
+    private void LoadFromBundle(Bundle savedInstanceState){
+        List<RecipeModel>  m = (List<RecipeModel> ) savedInstanceState.getSerializable("list");
+        SetGridManager();
+        recipeModelList.clear();
+        assert m != null;
+        recipeModelList.addAll(0, m);
+        customAdapter = new RecipeAdapter(getActivity(), recipeModelList);
+        recyclerView.setAdapter(customAdapter);
     }
 }

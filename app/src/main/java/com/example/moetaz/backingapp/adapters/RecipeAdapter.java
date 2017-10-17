@@ -27,9 +27,10 @@ import static android.R.id.message;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHolder> {
 
     private boolean IsRecopeInfo = false;
-    Context context;
+    private Context context;
     List<RecipeModel> recipeModels = new ArrayList<>();
     private List<RecipeModel.steps> stepses = new ArrayList<>();
+    private List<RecipeModel.ingredients> ingredientses = new ArrayList<>();
 
 
     public RecipeAdapter(Context context,List<RecipeModel> recipeModels) {
@@ -37,10 +38,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         this.recipeModels = recipeModels;
 
     }
-    public RecipeAdapter(Context context, List<RecipeModel.steps> steps ,boolean IsRecopeInfo) {
+    public RecipeAdapter(Context context, List<RecipeModel.steps> steps,List<RecipeModel.ingredients> ingredientses ,boolean IsRecopeInfo) {
         this.context = context;
         this.stepses = steps;
         this.IsRecopeInfo = IsRecopeInfo;
+        this.ingredientses = ingredientses;
     }
 
 
@@ -54,8 +56,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
+        final int index = position;
         if (!IsRecopeInfo) {
 
             final RecipeModel recipeModel = recipeModels.get(position);
@@ -70,18 +72,34 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
                 }
             });
         }else{
+            if(position == 0){
+                holder.textView.setText("Recipe ingredients");
+                holder.textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MyUtilities.IsIngredientFragment = true;
+                        Intent intent= new Intent(context,StepInfo.class);
+                        intent.putExtra("IngPass", (Serializable) ingredientses);
+                        context.startActivity(intent);
+                    }
+                });
+            }else {
+                final RecipeModel.steps step  = stepses.get(position-1);
 
-            final RecipeModel.steps step  = stepses.get(position);
+                holder.textView.setText(step .getShortDescription());
+                holder.textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent= new Intent(context,StepInfo.class);
+                        intent.putExtra("stepPass", (Serializable) stepses);
 
-            holder.textView.setText(step .getShortDescription());
-            holder.textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent= new Intent(context,StepInfo.class);
-                    intent.putExtra("stepPass",step);
-                    context.startActivity(intent);
-                }
-            });
+                        intent.putExtra("position",index-1);
+                        context.startActivity(intent);
+                    }
+                });
+            }
+
+
         }
     }
 
@@ -90,7 +108,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         if(!IsRecopeInfo)
         return recipeModels.size();
         else
-          return   stepses.size();
+          return   stepses.size()+1;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

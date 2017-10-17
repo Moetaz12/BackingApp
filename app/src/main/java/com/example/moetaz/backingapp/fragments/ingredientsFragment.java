@@ -10,23 +10,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.moetaz.backingapp.R;
+import com.example.moetaz.backingapp.adapters.IngredientAdapter;
 import com.example.moetaz.backingapp.adapters.RecipeAdapter;
 import com.example.moetaz.backingapp.models.RecipeModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecipeInfoFragment extends Fragment {
-     GridLayoutManager gridLayoutManager;
-     RecipeModel recipeModel ;
-     RecyclerView recyclerView;
-
-    public RecipeInfoFragment() {
+public class ingredientsFragment extends Fragment {
+    GridLayoutManager gridLayoutManager;
+    RecyclerView recyclerView;
+    private List<RecipeModel.ingredients> ingredientses = new ArrayList<>();
+    IngredientAdapter ingredientAdapter;
+    public ingredientsFragment() {
         // Required empty public constructor
     }
 
@@ -34,30 +35,31 @@ public class RecipeInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getActivity().getIntent();
-        recipeModel = (RecipeModel) intent.getSerializableExtra("modelPass");
+        ingredientses = (List<RecipeModel.ingredients>) intent.getSerializableExtra("IngPass");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_recipe_info, container, false);;
-        recyclerView = view.findViewById(R.id.recyleviewrecipeinfo);
-        setHasOptionsMenu(true);
+        View view = inflater.inflate(R.layout.fragment_ingredients, container, false);
+        recyclerView  = view.findViewById(R.id.IngredientRecyler);
+        recyclerView.hasFixedSize();
+        SetGridManager();
+        ingredientAdapter = new IngredientAdapter(getContext(),ingredientses);
+        recyclerView.setAdapter(ingredientAdapter);
 
-        LoadRecipInfo();
         return view;
     }
-
-    private void LoadRecipInfo() {
-        SetGridManager();
-        RecipeAdapter recipeAdapter = new RecipeAdapter(getContext(),recipeModel.getStepsList(),recipeModel.getIngredientsList(),true);
-        recyclerView.setAdapter(recipeAdapter);
-    }
-
     private void SetGridManager(){
         gridLayoutManager=new GridLayoutManager(getActivity(), 1);
 
+        /*
+        if(MainActivity.IsTowPane)
+            gridLayoutManager = new GridLayoutManager(getActivity(), 3);
+            */
+
         recyclerView.setLayoutManager(gridLayoutManager);
     }
+
 }
