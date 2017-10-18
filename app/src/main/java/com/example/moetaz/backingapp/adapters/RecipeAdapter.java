@@ -2,6 +2,8 @@ package com.example.moetaz.backingapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +13,16 @@ import android.widget.TextView;
 import com.example.moetaz.backingapp.R;
 import com.example.moetaz.backingapp.activities.RecipeInfo;
 import com.example.moetaz.backingapp.activities.StepInfo;
+import com.example.moetaz.backingapp.fragments.StepInfoFragment;
+import com.example.moetaz.backingapp.fragments.ingredientsFragment;
 import com.example.moetaz.backingapp.models.RecipeModel;
 import com.example.moetaz.backingapp.utilities.MyUtilities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindString;
 
 import static android.R.id.message;
 
@@ -28,7 +34,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
 
     private boolean IsRecopeInfo = false;
     private Context context;
-    List<RecipeModel> recipeModels = new ArrayList<>();
+    private List<RecipeModel> recipeModels = new ArrayList<>();
     private List<RecipeModel.steps> stepses = new ArrayList<>();
     private List<RecipeModel.ingredients> ingredientses = new ArrayList<>();
 
@@ -44,8 +50,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         this.IsRecopeInfo = IsRecopeInfo;
         this.ingredientses = ingredientses;
     }
-
-
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -78,9 +82,20 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
                     @Override
                     public void onClick(View v) {
                         MyUtilities.IsIngredientFragment = true;
-                        Intent intent= new Intent(context,StepInfo.class);
-                        intent.putExtra("IngPass", (Serializable) ingredientses);
-                        context.startActivity(intent);
+                        if (!MyUtilities.IsTowPane) {
+                            Intent intent= new Intent(context,StepInfo.class);
+                            intent.putExtra("IngPass", (Serializable) ingredientses);
+                            context.startActivity(intent);
+                        }else {
+                            ingredientsFragment detailFragment=new ingredientsFragment();
+                            Bundle b=new Bundle();
+                            b.putSerializable("IngPass",(Serializable)ingredientses);
+
+                            detailFragment.setArguments(b);
+                            ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fstep,detailFragment)
+                                    .commit();
+                        }
                     }
                 });
             }else {
@@ -90,17 +105,26 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
                 holder.textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent= new Intent(context,StepInfo.class);
-                        intent.putExtra("stepPass", (Serializable) stepses);
+                        if (!MyUtilities.IsTowPane) {
+                            Intent intent= new Intent(context,StepInfo.class);
+                            intent.putExtra("stepPass", (Serializable) stepses);
 
-                        intent.putExtra("position",index-1);
-                        context.startActivity(intent);
+                            intent.putExtra("position",index-1);
+                            context.startActivity(intent);
+                        }else {
+                            StepInfoFragment detailFragment=new StepInfoFragment();
+                            Bundle b=new Bundle();
+                            b.putSerializable("stepPass",(Serializable)stepses);
+                            b.putInt("position",index-1);
+                            detailFragment.setArguments(b);
+                            ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fstep,detailFragment)
+                                    .commit();
+                        }
                     }
                 });
             }
-
-
-        }
+    }
     }
 
     @Override

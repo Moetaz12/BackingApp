@@ -44,9 +44,9 @@ public class StepInfoFragment extends Fragment {
     @BindView(R.id.forward )   ImageView Forward;
     private List<RecipeModel.steps> stepses = new ArrayList<>();
 
-    SimpleExoPlayer simpleExoPlayer;
-    SimpleExoPlayerView simpleExoPlayerView;
-    RecipeModel.steps step;
+    private SimpleExoPlayer simpleExoPlayer;
+    private SimpleExoPlayerView simpleExoPlayerView;
+    private RecipeModel.steps step;
     TextView textView;
     View innerRoot;
     int position;
@@ -55,14 +55,21 @@ public class StepInfoFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HideActionBar();
+
         Intent intent = getActivity().getIntent();
-        stepses = (List<RecipeModel.steps>) intent.getSerializableExtra("stepPass");
-        position = intent.getIntExtra("position",0);
-        step = stepses.get(position);
+        if (!MyUtilities.IsTowPane) { //mobile
+            stepses = (List<RecipeModel.steps>) intent.getSerializableExtra("stepPass");
+            position = intent.getIntExtra("position",0);
+        }else { //tablet
+            stepses = (List<RecipeModel.steps>) getArguments().getSerializable("stepPass");
+            position = getArguments().getInt("position");
+        }
+            step = stepses.get(position);
 
     }
 
@@ -81,15 +88,7 @@ public class StepInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(position > 0){
-                    MyUtilities.message(getContext(),"Back");
-                    Fragment frg  ;
-                    frg = getActivity().getSupportFragmentManager().findFragmentByTag("stepinfo");
-                    final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.detach(frg);
-                    ft.attach(frg);
-
-                    step = stepses.get(--position);
-                    ft.commit();
+                    GoToPreviousStep(position);
                 }
 
             }
@@ -98,14 +97,7 @@ public class StepInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(position < stepses.size()-1 ){
-                    MyUtilities.message(getContext(),"Forward");
-                    Fragment frg  ;
-                    frg = getActivity().getSupportFragmentManager().findFragmentByTag("stepinfo");
-                    final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.detach(frg);
-                    ft.attach(frg);
-                    step = stepses.get(++position);
-                    ft.commit();
+                    GoToNextStep(position);
                 }
             }
         });
@@ -116,6 +108,29 @@ public class StepInfoFragment extends Fragment {
         }
 
         return view;
+    }
+
+    private void GoToNextStep(int position) {
+        MyUtilities.message(getContext(),"Forward");
+        Fragment frg  ;
+        frg = getActivity().getSupportFragmentManager().findFragmentByTag("stepinfo");
+        final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        step = stepses.get(++position);
+        ft.commit();
+    }
+
+    private void GoToPreviousStep(int position) {
+        MyUtilities.message(getContext(),"Back");
+        Fragment frg  ;
+        frg = getActivity().getSupportFragmentManager().findFragmentByTag("stepinfo");
+        final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+
+        step = stepses.get(--position);
+        ft.commit();
     }
 
 

@@ -130,11 +130,6 @@ public class MainFragment extends Fragment {
     private void SetGridManager(){
         gridLayoutManager=new GridLayoutManager(getActivity(), 1);
 
-        /*
-        if(MainActivity.IsTowPane)
-            gridLayoutManager = new GridLayoutManager(getActivity(), 3);
-            */
-
         recyclerView.setLayoutManager(gridLayoutManager);
     }
 
@@ -145,6 +140,7 @@ public class MainFragment extends Fragment {
             customAdapter.notifyDataSetChanged();
         }
     }
+    @SuppressWarnings("unchecked")
     private void LoadFromBundle(Bundle savedInstanceState){
         List<RecipeModel>  m = (List<RecipeModel> ) savedInstanceState.getSerializable("list");
         SetGridManager();
