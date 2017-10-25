@@ -55,7 +55,7 @@ public class MainFragment extends Fragment {
         if(savedInstanceState != null) {
             LoadFromBundle(savedInstanceState);
         }else {
-            LoadRecip();
+            LoadRecipe();
         }
         return view;
     }
@@ -72,7 +72,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void LoadRecip() {
+    private void LoadRecipe() {
         SetGridManager();
         customAdapter = new RecipeAdapter(getActivity(), recipeModelList);
         recyclerView.setAdapter(customAdapter);

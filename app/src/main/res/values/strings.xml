@@ -2,6 +2,12 @@
     <string name="app_name">BackingApp</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="ingMainTitle" >ingMainTitle</string>
+    <string name="appwidget_text">EXAMPLE</string>
+
+    <string-array name="PicsLinks">
+        <item>http://topamericanpie.com/wp-content/uploads/2015/05/Nutella-Pie-4.png</item>
+        <item>https://www.google.com.eg/url?sa=i&amp;rct=j&amp;q=&amp;esrc=s&amp;source=images&amp;cd=&amp;ved=0ahUKEwjuvemO2YXXAhULmbQKHZPWASYQjRwIBw&amp;url=http%3A%2F%2Ftheglorifiedtomato.com%2F2013%2F04%2F18%2Fbrownie-recipes-baking%2F&amp;psig=AOvVaw3rvR_k5uzWiZAKC71toJGy&amp;ust=1508812055337608</item>
+        <item>https://www.asweetpeachef.com/wp-content/uploads/2010/07/nanas-golden-chiffon-cake-and-a-lesson-in-grief2.png</item>
+        <item>https://sujonberries.files.wordpress.com/2011/05/blueberry-cheesecake.png</item>
+    </string-array>
 </resources>

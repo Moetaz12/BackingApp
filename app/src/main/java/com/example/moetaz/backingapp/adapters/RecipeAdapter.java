@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.moetaz.backingapp.R;
@@ -17,6 +18,7 @@ import com.example.moetaz.backingapp.fragments.StepInfoFragment;
 import com.example.moetaz.backingapp.fragments.ingredientsFragment;
 import com.example.moetaz.backingapp.models.RecipeModel;
 import com.example.moetaz.backingapp.utilities.MyUtilities;
+import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,11 +39,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
     private List<RecipeModel> recipeModels = new ArrayList<>();
     private List<RecipeModel.steps> stepses = new ArrayList<>();
     private List<RecipeModel.ingredients> ingredientses = new ArrayList<>();
-
+    private String[] pLinks;
 
     public RecipeAdapter(Context context,List<RecipeModel> recipeModels) {
         this.context = context;
         this.recipeModels = recipeModels;
+        pLinks =this.context.getResources().getStringArray(R.array.PicsLinks);
 
     }
     public RecipeAdapter(Context context, List<RecipeModel.steps> steps,List<RecipeModel.ingredients> ingredientses ,boolean IsRecopeInfo) {
@@ -53,7 +56,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_row, parent, false);
+        View view;
+        if(IsRecopeInfo){
+              view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stepinfo_row, parent, false);
+        }
+        else
+          view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_row, parent, false);
 
         MyViewHolder holder=new MyViewHolder(view);
         return holder;
@@ -66,6 +74,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
 
             final RecipeModel recipeModel = recipeModels.get(position);
             holder.textView.setText(recipeModel.getName());
+            Picasso.with(context).load(pLinks[position]).into(holder.pic);
             holder.textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -82,7 +91,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
                     @Override
                     public void onClick(View v) {
                         MyUtilities.IsIngredientFragment = true;
-                        if (!MyUtilities.IsTowPane) {
+                        if (!MyUtilities.IsTablet(context)) {
                             Intent intent= new Intent(context,StepInfo.class);
                             intent.putExtra("IngPass", (Serializable) ingredientses);
                             context.startActivity(intent);
@@ -105,7 +114,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
                 holder.textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!MyUtilities.IsTowPane) {
+                        if (!MyUtilities.IsTablet(context)) {
                             Intent intent= new Intent(context,StepInfo.class);
                             intent.putExtra("stepPass", (Serializable) stepses);
 
@@ -138,10 +147,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView textView;
+        ImageView pic;
         public MyViewHolder(View itemView) {
             super(itemView);
 
             textView = itemView.findViewById(R.id.title);
+            if (!IsRecopeInfo)
+                pic = itemView.findViewById(R.id.picrec);
 
 
         }

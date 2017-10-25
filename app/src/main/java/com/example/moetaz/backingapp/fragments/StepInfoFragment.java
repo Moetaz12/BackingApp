@@ -42,15 +42,14 @@ import butterknife.ButterKnife;
 public class StepInfoFragment extends Fragment {
     @BindView(R.id.back )   ImageView Back;
     @BindView(R.id.forward )   ImageView Forward;
+    @BindView(R.id.relativeStep )   View innerRoot;
+    @BindView(R.id.stepdesc )   TextView textView;
+    @BindView(R.id.exoView )   SimpleExoPlayerView simpleExoPlayerView;
     private List<RecipeModel.steps> stepses = new ArrayList<>();
-
     private SimpleExoPlayer simpleExoPlayer;
-    private SimpleExoPlayerView simpleExoPlayerView;
     private RecipeModel.steps step;
-    TextView textView;
-    View innerRoot;
     int position;
-    Uri VideoUri;
+    private Uri VideoUri;
     public StepInfoFragment() {
         // Required empty public constructor
     }
@@ -60,12 +59,11 @@ public class StepInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HideActionBar();
-
         Intent intent = getActivity().getIntent();
-        if (!MyUtilities.IsTowPane) { //mobile
+        if (!MyUtilities.IsTablet(getContext())) {
             stepses = (List<RecipeModel.steps>) intent.getSerializableExtra("stepPass");
             position = intent.getIntExtra("position",0);
-        }else { //tablet
+        }else {
             stepses = (List<RecipeModel.steps>) getArguments().getSerializable("stepPass");
             position = getArguments().getInt("position");
         }
@@ -78,9 +76,7 @@ public class StepInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_step_info, container, false);
-            ButterKnife.bind(this, view);
-        innerRoot = view.findViewById(R.id.relativeStep);
-        simpleExoPlayerView = view.findViewById(R.id.exoView);
+        ButterKnife.bind(this, view);
         DisplayVideo();
         textView = view.findViewById(R.id.stepdesc);
         textView.setText(step.getDescription());
@@ -88,7 +84,7 @@ public class StepInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(position > 0){
-                    GoToPreviousStep(position);
+                    GoToPreviousStep( );
                 }
 
             }
@@ -97,7 +93,7 @@ public class StepInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(position < stepses.size()-1 ){
-                    GoToNextStep(position);
+                    GoToNextStep( );
                 }
             }
         });
@@ -106,31 +102,32 @@ public class StepInfoFragment extends Fragment {
             innerRoot.setVisibility(View.GONE);
             textView.setVisibility(View.GONE);
         }
+        if (MyUtilities.IsTablet(getContext())){
+            Back.setVisibility(View.GONE);
+            Forward.setVisibility(View.GONE);
+        }
 
         return view;
     }
 
-    private void GoToNextStep(int position) {
-        MyUtilities.message(getContext(),"Forward");
+    private void GoToNextStep( ) {
+
+        RefreshFragment(++position);
+    }
+
+    private void RefreshFragment(int i) {
         Fragment frg  ;
         frg = getActivity().getSupportFragmentManager().findFragmentByTag("stepinfo");
         final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.detach(frg);
         ft.attach(frg);
-        step = stepses.get(++position);
+        step = stepses.get(i);
         ft.commit();
     }
 
-    private void GoToPreviousStep(int position) {
-        MyUtilities.message(getContext(),"Back");
-        Fragment frg  ;
-        frg = getActivity().getSupportFragmentManager().findFragmentByTag("stepinfo");
-        final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.detach(frg);
-        ft.attach(frg);
+    private void GoToPreviousStep( ) {
 
-        step = stepses.get(--position);
-        ft.commit();
+        RefreshFragment(--position);
     }
 
 

@@ -13,9 +13,7 @@ public class RecipeInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_info);
-        if(null != findViewById(R.id.fstep)){
-            MyUtilities.IsTowPane = true;
-        }
+
 
         if(savedInstanceState == null){
             getSupportFragmentManager().beginTransaction()

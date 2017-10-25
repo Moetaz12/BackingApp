@@ -1,20 +1,13 @@
 package com.example.moetaz.backingapp.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.example.moetaz.backingapp.R;
-import com.example.moetaz.backingapp.activities.RecipeInfo;
-import com.example.moetaz.backingapp.activities.StepInfo;
 import com.example.moetaz.backingapp.models.RecipeModel;
-import com.example.moetaz.backingapp.utilities.MyUtilities;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +39,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.My
     @Override
     public void onBindViewHolder(IngredientAdapter.MyViewHolder holder, final int position) {
         RecipeModel.ingredients ingredients =ingredientses.get(position);
-        MyUtilities.message(context,ingredients.getQuantity());
+
         holder.textView1.setText(ingredients.getQuantity());
         holder.textView2.setText(ingredients.getMeasure());
         holder.textView3.setText(ingredients.getIngredient());
