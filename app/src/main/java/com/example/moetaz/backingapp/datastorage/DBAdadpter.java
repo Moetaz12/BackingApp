@@ -47,14 +47,6 @@ public class DBAdadpter {
         return dbAdadpter;
     }
 
-    public long Insert (String quantity,String measure,String ing){
-        ContentValues cv =new ContentValues();
-        cv.put(QUANTITY,quantity);
-        cv.put(MEASURE,measure);
-        cv.put(INGGREDIENT,ing);
-
-        return sqLiteDatabase.insert(TABLE_NAME,null,cv) ;
-    }
 
     public List<RecipeModel.ingredients> GetData (){
         List<RecipeModel.ingredients> ingredientses = new ArrayList<>();
@@ -80,8 +72,18 @@ public class DBAdadpter {
         return ingredientses;
     }
 
-    public void DeleteAllDate (){
-          sqLiteDatabase.execSQL("delete from " + TABLE_NAME);  ;
+
+    public long InsertContentValue(ContentValues values) {
+        return sqLiteDatabase.insert(TABLE_NAME,null,values);
+    }
+
+    public Cursor getCursorsForAllData() {
+        return sqLiteDatabase.query(TABLE_NAME
+                ,new String []{QUANTITY,MEASURE,INGGREDIENT},null,null,null,null,null,null);
+    }
+
+    public int deleteIng() {
+          return sqLiteDatabase.delete(TABLE_NAME,null,null);
     }
 
 

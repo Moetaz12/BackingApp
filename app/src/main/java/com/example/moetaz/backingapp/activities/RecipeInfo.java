@@ -14,7 +14,6 @@ public class RecipeInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_info);
 
-
         if(savedInstanceState == null){
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.frecioeinfo,new RecipeInfoFragment()).commit();

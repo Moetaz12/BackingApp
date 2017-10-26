@@ -38,7 +38,7 @@ public class MainFragment extends Fragment {
     private GridLayoutManager gridLayoutManager;
     private RecyclerView recyclerView;
     private List<RecipeModel> recipeModelList = new ArrayList<>();
-    private RecipeAdapter customAdapter;
+    private RecipeAdapter recipeAdapter;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -74,8 +74,8 @@ public class MainFragment extends Fragment {
 
     private void LoadRecipe() {
         SetGridManager();
-        customAdapter = new RecipeAdapter(getActivity(), recipeModelList);
-        recyclerView.setAdapter(customAdapter);
+        recipeAdapter = new RecipeAdapter(getActivity(), recipeModelList);
+        recyclerView.setAdapter(recipeAdapter);
         LoadByVolley();
     }
 
@@ -92,7 +92,7 @@ public class MainFragment extends Fragment {
                 while (iterator.hasNext()){
                     RecipeModel movie = (RecipeModel) iterator.next();
                     recipeModelList.add(movie);
-                    customAdapter.notifyItemInserted(recipeModelList.size() - 1);
+                    recipeAdapter.notifyItemInserted(recipeModelList.size() - 1);
                 }
 
             } catch (UnsupportedEncodingException e) {
@@ -111,7 +111,7 @@ public class MainFragment extends Fragment {
                     while (iterator.hasNext()){
                         RecipeModel movie = (RecipeModel) iterator.next();
                         recipeModelList.add(movie);
-                        customAdapter.notifyItemInserted(recipeModelList.size() - 1);
+                        recipeAdapter.notifyItemInserted(recipeModelList.size() - 1);
 
                     }
 
@@ -137,7 +137,7 @@ public class MainFragment extends Fragment {
     {
         if (recipeModelList != null){
             recipeModelList.clear();
-            customAdapter.notifyDataSetChanged();
+            recipeAdapter.notifyDataSetChanged();
         }
     }
     @SuppressWarnings("unchecked")
@@ -147,7 +147,7 @@ public class MainFragment extends Fragment {
         recipeModelList.clear();
         assert m != null;
         recipeModelList.addAll(0, m);
-        customAdapter = new RecipeAdapter(getActivity(), recipeModelList);
-        recyclerView.setAdapter(customAdapter);
+        recipeAdapter = new RecipeAdapter(getActivity(), recipeModelList);
+        recyclerView.setAdapter(recipeAdapter);
     }
 }

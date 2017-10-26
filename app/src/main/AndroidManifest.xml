@@ -30,6 +30,18 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/baking_widget_provider_info" />
         </receiver>
+
+        <provider
+            android:authorities="com.example.moetaz.backingapp"
+            android:name=".provider.IngProvider"
+            android:exported="true"
+            />
+        <service android:name=".widgets.WidgetService"
+            android:exported="true"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            />
+
+
     </application>
 
 </manifest>
