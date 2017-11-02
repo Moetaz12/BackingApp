@@ -11,4 +11,7 @@ public class Constants {
     public static final String Step_Pass_Key = "stepPass";
     public static final String Action_Bar_Title_Key = "BarTitle";
     public static final String Widget_Confirmation_msg = "ingredients added to the widget ";
+    public static final String Ing_List_Key = "IngPass ";
+    public static final String Recipe_Name_Key = "rName ";
+    public static final String Step_Position_Key = "position";
 }

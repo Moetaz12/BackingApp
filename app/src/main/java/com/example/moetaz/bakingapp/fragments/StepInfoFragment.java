@@ -33,6 +33,7 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class StepInfoFragment extends Fragment {
+    @BindView(R.id.video_img )   ImageView img;
     @BindView(R.id.back )   ImageView Back;
     @BindView(R.id.forward )   ImageView Forward;
     @BindView(R.id.relativeStep )   View innerRoot;
@@ -53,7 +55,7 @@ public class StepInfoFragment extends Fragment {
     private SimpleExoPlayer simpleExoPlayer;
     private RecipeModel.steps step;
     int position;
-    private Uri VideoUri;
+
     public StepInfoFragment() {
         // Required empty public constructor
     }
@@ -71,7 +73,7 @@ public class StepInfoFragment extends Fragment {
             Intent intent = getActivity().getIntent();
             if (!MyUtilities.IsTablet(getContext())) {
                 stepses = (List<RecipeModel.steps>) intent.getSerializableExtra(Constants.Step_Pass_Key);
-                position = intent.getIntExtra("position",0);
+                position = intent.getIntExtra("position",2);
             }else {
                 stepses = (List<RecipeModel.steps>) getArguments().getSerializable(Constants.Step_Pass_Key);
                 position = getArguments().getInt("position");
@@ -89,9 +91,18 @@ public class StepInfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_step_info, container, false);
         ButterKnife.bind(this, view);
         if(!step.getVideoURL().equals("")){
-            DisplayVideo();
+            DisplayVideo(Uri.parse(step.getVideoURL()));
+        }else if(!step.getThumbnailURL().equals("")){
+            img.setVisibility(View.VISIBLE);
+            simpleExoPlayerView.setVisibility(View.GONE);
+             Picasso.with(getContext()).load(step.getThumbnailURL()).into(img);
+
+        }else {
+            img.setVisibility(View.VISIBLE);
+            simpleExoPlayerView.setVisibility(View.GONE);
+            img.setBackgroundResource(R.drawable.novid);
         }
-        simpleExoPlayerView.setBackgroundResource(R.drawable.novid);
+
 
         textView.setText(step.getDescription());
 
@@ -148,7 +159,7 @@ public class StepInfoFragment extends Fragment {
 
     private void HideActionBar(){
         try {
-             ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+            ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -158,17 +169,17 @@ public class StepInfoFragment extends Fragment {
         int ot = getResources().getConfiguration().orientation;
         return (Configuration.ORIENTATION_LANDSCAPE == ot);
     }
-    private void DisplayVideo(){
+    private void DisplayVideo(Uri uri){
         try {
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
             TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
             simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(),trackSelector);
 
-            VideoUri = Uri.parse(step.getVideoURL());
+
             DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("exop");
             ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 
-            MediaSource mediaSource = new ExtractorMediaSource(VideoUri,dataSourceFactory ,extractorsFactory,null,null);
+            MediaSource mediaSource = new ExtractorMediaSource(uri,dataSourceFactory ,extractorsFactory,null,null);
             simpleExoPlayerView.setPlayer(simpleExoPlayer);
             simpleExoPlayer.prepare(mediaSource);
             simpleExoPlayer.setPlayWhenReady(false);
@@ -185,4 +196,42 @@ public class StepInfoFragment extends Fragment {
         outState.putInt("p",position);
 
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (simpleExoPlayer!=null) {
+            simpleExoPlayer.stop();
+            simpleExoPlayer.release();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (simpleExoPlayer!=null) {
+            simpleExoPlayer.stop();
+            simpleExoPlayer.release();
+            simpleExoPlayer=null;
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (simpleExoPlayer!=null) {
+            simpleExoPlayer.stop();
+            simpleExoPlayer.release();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (simpleExoPlayer!=null) {
+            simpleExoPlayer.stop();
+            simpleExoPlayer.release();
+        }
+    }
+
 }

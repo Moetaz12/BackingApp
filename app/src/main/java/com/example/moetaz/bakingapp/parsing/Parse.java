@@ -41,6 +41,7 @@ public class Parse {
                     steps.setShortDescription(innerObject.getString("shortDescription"));
                     steps.setDescription(innerObject.getString("description"));
                     steps.setVideoURL(innerObject.getString("videoURL"));
+                    steps.setThumbnailURL(innerObject.getString("thumbnailURL"));
                     stepses.add(steps);
                 }
 

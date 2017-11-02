@@ -15,17 +15,17 @@ public class StepInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_info);
 
-
-        if(MyUtilities.IsIngredientFragment &&savedInstanceState == null ){
+        if(MyUtilities.IsIngredientFragment){
             MyUtilities.IsIngredientFragment = false;
+            if(savedInstanceState == null){
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.fstep,new ingredientsFragment(),"Ingredientinfo").commit();
-
+            }
         }else {
-
+            if(savedInstanceState == null){
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.fstep,new StepInfoFragment(),"stepinfo").commit();
-
+            }
         }
 
     }

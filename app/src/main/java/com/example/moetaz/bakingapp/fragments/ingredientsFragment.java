@@ -66,11 +66,11 @@ public class ingredientsFragment extends Fragment {
         contentResolver = getActivity().getContentResolver();
         if (!MyUtilities.IsTablet(getContext())){
             Intent intent = getActivity().getIntent();
-            ingredientses = (List<RecipeModel.ingredients>) intent.getSerializableExtra("IngPass");
-            Name = intent.getStringExtra("rName");
+            ingredientses = (List<RecipeModel.ingredients>) intent.getSerializableExtra(Constants.Ing_List_Key);
+            Name = intent.getStringExtra(Constants.Recipe_Name_Key);
         }else {
-            ingredientses = (List<RecipeModel.ingredients>) getArguments().getSerializable("IngPass");
-            Name = getArguments().getString("rName");
+            ingredientses = (List<RecipeModel.ingredients>) getArguments().getSerializable(Constants.Ing_List_Key);
+            Name = getArguments().getString(Constants.Recipe_Name_Key);
         }
 
 

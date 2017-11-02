@@ -80,6 +80,17 @@ public class RecipeModel implements Serializable {
         private String description;
         private String videoURL;
 
+        public void setThumbnailURL(String thumbnailURL) {
+            this.thumbnailURL = thumbnailURL;
+        }
+
+        public String getThumbnailURL() {
+
+            return thumbnailURL;
+        }
+
+        private String thumbnailURL;
+
         public String getShortDescription() {
             return shortDescription;
         }

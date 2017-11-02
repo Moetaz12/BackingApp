@@ -9,4 +9,5 @@
     <dimen name="step_desc_textsize">20sp</dimen>
     <dimen name="navi_width">100dp</dimen>
     <dimen name="mainfragment_recycler_paddingTop">66dp</dimen>
+    <dimen name="desc_padding">10dp</dimen>
 </resources>
