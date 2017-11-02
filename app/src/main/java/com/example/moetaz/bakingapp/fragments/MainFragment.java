@@ -4,8 +4,10 @@ package com.example.moetaz.bakingapp.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import com.example.moetaz.bakingapp.adapters.RecipeAdapter;
 import com.example.moetaz.bakingapp.models.RecipeModel;
 import com.example.moetaz.bakingapp.parsing.Parse;
 import com.example.moetaz.bakingapp.utilities.Constants;
+import com.example.moetaz.bakingapp.utilities.MyUtilities;
 import com.example.moetaz.bakingapp.utilities.Mysingleton;
 
 import java.io.Serializable;
@@ -37,7 +40,7 @@ import static com.example.moetaz.bakingapp.utilities.MyUtilities.message;
  * A simple {@link Fragment} subclass.
  */
 public class MainFragment extends Fragment {
-
+    private Toolbar toolbar;
     private GridLayoutManager gridLayoutManager;
     @BindView(R.id.recyleviewrecipe)
     RecyclerView recyclerView;
@@ -48,6 +51,12 @@ public class MainFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getActivity().setTitle(getString(R.string.app_Title));
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +64,8 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
+        toolbar = (Toolbar) view.findViewById(R.id.app_bar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
         if (savedInstanceState != null) {
@@ -127,7 +138,7 @@ public class MainFragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
-                    message(getActivity(), "Something went Wrong");
+                    message(getActivity(), Constants.Error_message);
                 }
             });
             Mysingleton.getInstance(getActivity()).addToRequest(stringRequest);
@@ -136,7 +147,8 @@ public class MainFragment extends Fragment {
 
     private void SetGridManager() {
         gridLayoutManager = new GridLayoutManager(getActivity(), 1);
-
+        if(MyUtilities.IsTablet(getContext()))
+            gridLayoutManager = new GridLayoutManager(getActivity(), 3);
         recyclerView.setLayoutManager(gridLayoutManager);
     }
 
@@ -157,4 +169,5 @@ public class MainFragment extends Fragment {
         recipeAdapter = new RecipeAdapter(getActivity(), recipeModelList);
         recyclerView.setAdapter(recipeAdapter);
     }
+
 }

@@ -11,8 +11,9 @@ public class SharedPref {
 
     public SharedPref(Context context) {
         this.context = context;
-          preferences = PreferenceManager.getDefaultSharedPreferences(this.context);
-    }
+        preferences = this.context.getSharedPreferences(
+                "Pref", Context.MODE_APPEND
+        );    }
 
     public void SaveItem(String key,String value){
 
@@ -20,7 +21,11 @@ public class SharedPref {
         editor.putString(key,value);
         editor.apply();
     }
-
+    public void RemoveItem(String Item){
+        SharedPreferences.Editor editor = this.preferences.edit();
+        editor.remove(Item);
+        editor.apply();
+    }
     public String GetItem(String key){
 
         return  preferences.getString(key, "");

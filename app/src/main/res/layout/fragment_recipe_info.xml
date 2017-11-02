@@ -5,7 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.moetaz.bakingapp.fragments.RecipeInfoFragment">
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar">
 
+    </include>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyleviewrecipeinfo"
         android:layout_width="match_parent"

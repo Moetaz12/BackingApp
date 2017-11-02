@@ -9,8 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.example.moetaz.bakingapp.R;
 import com.example.moetaz.bakingapp.adapters.IngredientAdapter;
 import com.example.moetaz.bakingapp.datastorage.SharedPref;
 import com.example.moetaz.bakingapp.models.RecipeModel;
+import com.example.moetaz.bakingapp.utilities.Constants;
 import com.example.moetaz.bakingapp.utilities.MyUtilities;
 
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.moetaz.bakingapp.utilities.Constants.Widget_Confirmation_msg;
 import static com.example.moetaz.bakingapp.utilities.IngProivderConstants.CONTENT_URI_1;
 import static com.example.moetaz.bakingapp.utilities.IngProivderConstants.INGGREDIENT;
 import static com.example.moetaz.bakingapp.utilities.IngProivderConstants.MEASURE;
@@ -39,6 +43,7 @@ import static com.example.moetaz.bakingapp.utilities.IngProivderConstants.QUANTI
  */
 public class ingredientsFragment extends Fragment {
     FloatingActionButton fab;
+    private Toolbar toolbar;
     GridLayoutManager gridLayoutManager;
     @BindView(R.id.IngredientRecyler)
     RecyclerView recyclerView;
@@ -49,17 +54,25 @@ public class ingredientsFragment extends Fragment {
 
     public ingredientsFragment() {
         // Required empty public constructor
-    }
+    }//IngPass
 
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getActivity().setTitle(new SharedPref(getContext()).GetItem(Constants.Action_Bar_Title_Key));
+
         contentResolver = getActivity().getContentResolver();
-        Intent intent = getActivity().getIntent();
-        ingredientses = (List<RecipeModel.ingredients>) intent.getSerializableExtra("IngPass");
-        Name = intent.getStringExtra("rName");
+        if (!MyUtilities.IsTablet(getContext())){
+            Intent intent = getActivity().getIntent();
+            ingredientses = (List<RecipeModel.ingredients>) intent.getSerializableExtra("IngPass");
+            Name = intent.getStringExtra("rName");
+        }else {
+            ingredientses = (List<RecipeModel.ingredients>) getArguments().getSerializable("IngPass");
+            Name = getArguments().getString("rName");
+        }
+
 
     }
 
@@ -70,6 +83,9 @@ public class ingredientsFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_ingredients, container, false);
         ButterKnife.bind(this, view);
         fab = view.findViewById(R.id.fab);
+        toolbar = (Toolbar) view.findViewById(R.id.app_bar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        setHasOptionsMenu(true);
 
         recyclerView.hasFixedSize();
         SetGridManager();
@@ -91,7 +107,7 @@ public class ingredientsFragment extends Fragment {
                     contentResolver.insert(CONTENT_URI_1, cv);
 
                 }
-                Toast.makeText(getContext(), "ingredients added to the widget ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), Widget_Confirmation_msg, Toast.LENGTH_SHORT).show();
             }
         });
         return view;

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +16,11 @@ import android.widget.TextView;
 import com.example.moetaz.bakingapp.R;
 import com.example.moetaz.bakingapp.activities.RecipeInfo;
 import com.example.moetaz.bakingapp.activities.StepInfo;
+import com.example.moetaz.bakingapp.datastorage.SharedPref;
 import com.example.moetaz.bakingapp.fragments.StepInfoFragment;
 import com.example.moetaz.bakingapp.fragments.ingredientsFragment;
 import com.example.moetaz.bakingapp.models.RecipeModel;
+import com.example.moetaz.bakingapp.utilities.Constants;
 import com.example.moetaz.bakingapp.utilities.MyUtilities;
 import com.squareup.picasso.Picasso;
 
@@ -62,51 +66,31 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         else
           view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_row, parent, false);
 
-        MyViewHolder holder=new MyViewHolder(view);
-        return holder;
+        return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        final int index = position;
+
         if (!IsRecipeInfo) {
 
             final RecipeModel recipeModel = recipeModels.get(position);
+
+
             holder.textView.setText(recipeModel.getName());
             Picasso.with(context).load(pLinks[position]).into(holder.pic);
-            holder.textView.setOnClickListener(new View.OnClickListener() {
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent= new Intent(context,RecipeInfo.class);
-
-                    intent.putExtra("modelPass",recipeModel);
+                    new SharedPref(context).SaveItem(Constants.Action_Bar_Title_Key,recipeModel.getName());
+                     Intent intent= new Intent(context,RecipeInfo.class);
+                    intent.putExtra(Constants.Model_Key,recipeModel);
                     context.startActivity(intent);
                 }
             });
         }else{
             if(position == 0){
-                holder.textView.setText("Recipe ingredients");
-                holder.textView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MyUtilities.IsIngredientFragment = true;
-                        if (!MyUtilities.IsTablet(context)) {
-                            Intent intent= new Intent(context,StepInfo.class);
-                            intent.putExtra("IngPass", (Serializable) ingredientses);
-                            intent.putExtra("rName",RecipeTitle);
-                            context.startActivity(intent);
-                        }else {
-                            ingredientsFragment detailFragment=new ingredientsFragment();
-                            Bundle b=new Bundle();
-                            b.putSerializable("IngPass",(Serializable)ingredientses);
-                            b.putString("rName",RecipeTitle);
-                            detailFragment.setArguments(b);
-                            ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.fstep,detailFragment)
-                                    .commit();
-                        }
-                    }
-                });
+                GoTO_Ingredients(holder.pic,holder.textView);
             }else {
                 final RecipeModel.steps step  = stepses.get(position-1);
 
@@ -116,15 +100,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
                     public void onClick(View v) {
                         if (!MyUtilities.IsTablet(context)) {
                             Intent intent= new Intent(context,StepInfo.class);
-                            intent.putExtra("stepPass", (Serializable) stepses);
+                            intent.putExtra(Constants.Step_Pass_Key, (Serializable) stepses);
 
-                            intent.putExtra("position",index-1);
+                            intent.putExtra("position",position-1);
                             context.startActivity(intent);
                         }else {
                             StepInfoFragment detailFragment=new StepInfoFragment();
                             Bundle b=new Bundle();
-                            b.putSerializable("stepPass",(Serializable)stepses);
-                            b.putInt("position",index-1);
+                            b.putSerializable(Constants.Step_Pass_Key,(Serializable)stepses);
+                            b.putInt("position",position-1);
                             detailFragment.setArguments(b);
                             ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.fstep,detailFragment)
@@ -145,17 +129,47 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
+        CardView cardView;
         TextView textView;
         ImageView pic;
         public MyViewHolder(View itemView) {
             super(itemView);
 
             textView = itemView.findViewById(R.id.title);
-            if (!IsRecipeInfo)
+            if (IsRecipeInfo)
+                pic = itemView.findViewById(R.id.sample_icon);
+                else {
                 pic = itemView.findViewById(R.id.picrec);
+                cardView = itemView.findViewById(R.id.main_card);
+            }
 
 
         }
+
+    }
+    private void GoTO_Ingredients(ImageView pic,TextView textView){
+        pic.setVisibility(View.INVISIBLE);
+        textView.setText(R.string.Recipe_ingredients);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyUtilities.IsIngredientFragment = true;
+                if (!MyUtilities.IsTablet(context)) {
+                    Intent intent= new Intent(context,StepInfo.class);
+                    intent.putExtra("IngPass", (Serializable) ingredientses);
+                    intent.putExtra("rName",RecipeTitle);
+                    context.startActivity(intent);
+                }else {
+                    ingredientsFragment detailFragment=new ingredientsFragment();
+                    Bundle b=new Bundle();
+                    b.putSerializable("IngPass",(Serializable)ingredientses);
+                    b.putString("rName",RecipeTitle);
+                    detailFragment.setArguments(b);
+                    ((FragmentActivity)context).getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fstep,detailFragment)
+                            .commit();
+                }
+            }
+        });
     }
 }

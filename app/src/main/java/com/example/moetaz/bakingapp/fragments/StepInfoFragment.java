@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.moetaz.bakingapp.R;
 import com.example.moetaz.bakingapp.models.RecipeModel;
+import com.example.moetaz.bakingapp.utilities.Constants;
 import com.example.moetaz.bakingapp.utilities.MyUtilities;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -69,10 +70,10 @@ public class StepInfoFragment extends Fragment {
         }else {
             Intent intent = getActivity().getIntent();
             if (!MyUtilities.IsTablet(getContext())) {
-                stepses = (List<RecipeModel.steps>) intent.getSerializableExtra("stepPass");
+                stepses = (List<RecipeModel.steps>) intent.getSerializableExtra(Constants.Step_Pass_Key);
                 position = intent.getIntExtra("position",0);
             }else {
-                stepses = (List<RecipeModel.steps>) getArguments().getSerializable("stepPass");
+                stepses = (List<RecipeModel.steps>) getArguments().getSerializable(Constants.Step_Pass_Key);
                 position = getArguments().getInt("position");
             }
         }
@@ -182,5 +183,6 @@ public class StepInfoFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putSerializable("mlist", (Serializable) stepses);
         outState.putInt("p",position);
+
     }
 }
