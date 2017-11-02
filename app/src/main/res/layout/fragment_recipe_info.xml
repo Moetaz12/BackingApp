@@ -4,15 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.moetaz.backingapp.fragments.RecipeInfoFragment">
-
-
+    tools:context="com.example.moetaz.bakingapp.fragments.RecipeInfoFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyleviewrecipeinfo"
-        android:layout_weight="15"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"> </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
