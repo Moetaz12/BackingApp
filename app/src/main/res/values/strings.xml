@@ -4,6 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="Recipe_ingredients">Recipe ingredients</string>
     <string name="app_Title">Baking App</string>
+    <string name="title_activity_display_message">Recipe</string>
 
     <string-array name="PicsLinks">
         <item>http://topamericanpie.com/wp-content/uploads/2015/05/Nutella-Pie-4.png</item>

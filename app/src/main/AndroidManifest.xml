@@ -3,6 +3,7 @@
     package="com.example.moetaz.bakingapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -18,7 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.moetaz.bakingapp.activities.RecipeInfo" />
+        <activity android:name="com.example.moetaz.bakingapp.activities.RecipeInfo"
+              android:label="@string/title_activity_display_message"
+            android:parentActivityName=".activities.MainActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+
+        </activity>/>
         <activity android:name="com.example.moetaz.bakingapp.activities.StepInfo" />
 
         <receiver android:name="com.example.moetaz.bakingapp.widgets.BakingWidgetProvider">

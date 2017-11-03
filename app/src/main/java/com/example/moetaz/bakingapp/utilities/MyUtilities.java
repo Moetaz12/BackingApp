@@ -13,6 +13,8 @@ import com.example.moetaz.bakingapp.R;
 public class MyUtilities {
 
     public static boolean IsIngredientFragment = false;
+
+
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;

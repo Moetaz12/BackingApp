@@ -14,4 +14,5 @@ public class Constants {
     public static final String Ing_List_Key = "IngPass ";
     public static final String Recipe_Name_Key = "rName ";
     public static final String Step_Position_Key = "position";
+    public static String NetworkErrorMsg = "Check Internet Conection";
 }

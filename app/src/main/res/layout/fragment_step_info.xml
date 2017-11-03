@@ -4,7 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.moetaz.bakingapp.fragments.StepInfoFragment">
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar">
 
+    </include>
     <ImageView
         android:id="@+id/video_img"
         android:visibility="gone"

@@ -14,12 +14,16 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.moetaz.bakingapp.R;
+import com.example.moetaz.bakingapp.activities.MainActivity;
 import com.example.moetaz.bakingapp.adapters.IngredientAdapter;
 import com.example.moetaz.bakingapp.datastorage.SharedPref;
 import com.example.moetaz.bakingapp.models.RecipeModel;
@@ -43,7 +47,7 @@ import static com.example.moetaz.bakingapp.utilities.IngProivderConstants.QUANTI
  */
 public class ingredientsFragment extends Fragment {
     FloatingActionButton fab;
-    private Toolbar toolbar;
+    @BindView(R.id.app_bar) Toolbar toolbar;
     GridLayoutManager gridLayoutManager;
     @BindView(R.id.IngredientRecyler)
     RecyclerView recyclerView;
@@ -77,14 +81,23 @@ public class ingredientsFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        try {
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } catch (Exception e) {
+            MyUtilities.message(getContext(),"error");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.fragment_ingredients, container, false);
         ButterKnife.bind(this, view);
         fab = view.findViewById(R.id.fab);
-        toolbar = (Toolbar) view.findViewById(R.id.app_bar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
         recyclerView.hasFixedSize();
@@ -118,6 +131,24 @@ public class ingredientsFragment extends Fragment {
 
         recyclerView.setLayoutManager(gridLayoutManager);
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                getActivity().finish();
+                startActivity(new Intent(getContext(), MainActivity.class));
+
+                return true;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }

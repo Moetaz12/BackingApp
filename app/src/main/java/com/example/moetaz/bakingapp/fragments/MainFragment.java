@@ -40,7 +40,7 @@ import static com.example.moetaz.bakingapp.utilities.MyUtilities.message;
  * A simple {@link Fragment} subclass.
  */
 public class MainFragment extends Fragment {
-    private Toolbar toolbar;
+    @BindView(R.id.app_bar) Toolbar toolbar;
     private GridLayoutManager gridLayoutManager;
     @BindView(R.id.recyleviewrecipe)
     RecyclerView recyclerView;
@@ -64,14 +64,20 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
-        toolbar = (Toolbar) view.findViewById(R.id.app_bar);
+
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
         if (savedInstanceState != null) {
             LoadFromBundle(savedInstanceState);
         } else {
-            LoadRecipe();
+
+            if (MyUtilities.isNetworkConnected(getContext())) {
+                LoadRecipe();
+            } else {
+                MyUtilities.message(getContext(),Constants.NetworkErrorMsg);
+            }
+
         }
         return view;
     }
